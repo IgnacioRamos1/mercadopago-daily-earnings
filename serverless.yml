@@ -1,0 +1,104 @@
+service: mercadopago-payments-processor
+
+provider:
+  name: aws
+  runtime: python3.11
+  stage: ${opt:stage, 'dev'}
+  region: sa-east-1
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - secretsmanager:GetSecretValue
+            - secretsmanager:ListSecrets
+          Resource: "*"
+        - Effect: Allow
+          Action:
+            - sqs:SendMessage
+            - sqs:ReceiveMessage
+            - sqs:DeleteMessage
+            - sqs:GetQueueUrl
+          Resource: 
+            - "arn:aws:sqs:sa-east-1:*:mp-processor-queue-${self:provider.stage}"
+        - Effect: Allow
+          Action:
+            - sns:Publish
+          Resource:
+            Fn::Join:
+              - ":"
+              - - "arn:aws:sns"
+                - Ref: "AWS::Region"
+                - Ref: "AWS::AccountId"
+                - 
+                  Fn::Join:
+                    - "-"
+                    - - "MpLambdaErrorNotifications"
+                      - ${self:provider.stage}
+
+functions:
+  triggerProcessing:
+    handler: handler.trigger_mp_processing
+    timeout: 30
+    logRetentionInDays: 5
+    environment:
+      STAGE: ${self:provider.stage}
+      SQS_QUEUE_NAME: mp-processor-queue-${self:provider.stage}
+    events:
+      ${self:custom.cronEvent.${self:provider.stage}}
+
+  processShop:
+    handler: handler.process_mp_shop
+    timeout: 30
+    logRetentionInDays: 5
+    environment:
+      STAGE: ${self:provider.stage}
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - MpProcessorQueue
+              - Arn
+          batchSize: 1  # Procesa un mensaje (tienda) a la vez.
+
+resources:
+  Resources:
+    MpProcessorQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: mp-processor-queue-${self:provider.stage}
+    MpLambdaErrorNotifications:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: "Lambda Error Notifications-${self:provider.stage}"
+        TopicName: "MpLambdaErrorNotifications-${self:provider.stage}"
+    MpLambdaFunctionErrorAlarm:
+      Type: AWS::CloudWatch::Alarm
+      Properties:
+        AlarmDescription: "Triggered when the Lambda function has errors"
+        Namespace: "AWS/Lambda"
+        MetricName: "Errors"
+        Statistic: "Sum"
+        Period: 300
+        EvaluationPeriods: 1
+        Threshold: 1
+        ComparisonOperator: "GreaterThanOrEqualToThreshold"
+        AlarmActions:
+          - Ref: MpLambdaErrorNotifications
+        Dimensions:
+          - Name: "FunctionName"
+            Value:
+              Fn::GetAtt:
+                - "ProcessShopLambdaFunction"
+                - "Arn"
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    requirementsFile: requirements.txt
+  cronEvent:
+    prod:
+      - schedule: cron(0 20 * * ? *)
+    dev: []
