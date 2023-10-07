@@ -42,8 +42,8 @@ def list_shop_secrets():
 
         shop_secrets = []
         for secret in response['SecretList']:
-            if secret['Name'].startswith('shop_secret_'):
-                shop_secrets.append(secret['Name'].replace('shop_secret_', ''))
+            if secret['Name'].startswith('mp_secret_'):
+                shop_secrets.append(secret['Name'].replace('mp_secret_', ''))
 
         return shop_secrets
 

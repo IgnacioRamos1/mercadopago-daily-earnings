@@ -5,7 +5,7 @@ def get_all_payments(credentials):
     try:
         headers = {
             'accept': 'application/json',
-            'Authorization': 'Bearer APP_USR-7456765304229697-070519-3f9793256eb6b0c17fe0c6a200ebf728-291577401'
+            'Authorization': f'Bearer {credentials["access_token"]}'
         }
 
         params = {

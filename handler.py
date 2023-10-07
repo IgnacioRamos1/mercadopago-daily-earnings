@@ -1,4 +1,4 @@
-from api.get_all_payments import get_all_payments
+from api.get_payments import get_all_payments
 from utils.utils import send_messages_to_sqs, list_shop_secrets, get_secret
 
 import os
@@ -57,9 +57,9 @@ def process_mp_shop(event, context):
             shop_name = message_body['shop_name']
 
             # Recuperar las credenciales para esta tienda específica
-            #credentials = get_secret(f'mp_secret_{shop_name}')
+            credentials = get_secret(f'mp_secret_{shop_name}')
             # Procesar órdenes para esta tienda
-            print(get_all_payments('credentials'))
+            print(get_all_payments(credentials))
             print('Fin de procesamiento de tienda')
 
         return {
