@@ -16,8 +16,8 @@ def get_all_payments(credentials):
         end_of_day = datetime.datetime.combine(today + datetime.timedelta(days=1), datetime.time(4, 0)).isoformat() + 'Z'  # 04:00:00 del día siguiente
 
         params = {
-            'begin_date': '2023-10-05T04:00:00Z',
-            'end_date': '2023-10-06T04:00:00Z',
+            'begin_date': start_of_day,
+            'end_date': end_of_day,
             'limit': 100,
             'offset': 0
         }
