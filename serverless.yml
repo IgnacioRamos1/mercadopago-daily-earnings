@@ -10,6 +10,11 @@ provider:
       statements:
         - Effect: Allow
           Action:
+            - ssm:GetParameter
+            - ssm:DescribeParameters
+          Resource: "*"
+        - Effect: Allow
+          Action:
             - secretsmanager:GetSecretValue
             - secretsmanager:ListSecrets
           Resource: "*"

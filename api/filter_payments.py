@@ -25,6 +25,10 @@ def filter_all_payments(credentials, payments):
                     totals_by_product[product_name] += net_amount
                 else:
                     print(f"Warning: No product found for net amount {net_amount}!")
+        
+        # Redondear a dos decimales y agregar comas como separadores de miles
+        for product_name, total in totals_by_product.items():
+            totals_by_product[product_name] = "{:,.2f}".format(round(total, 2))
     
         return totals_by_product
 

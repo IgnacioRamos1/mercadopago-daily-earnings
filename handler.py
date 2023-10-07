@@ -59,7 +59,7 @@ def process_mp_shop(event, context):
             # Recuperar las credenciales para esta tienda específica
             credentials = get_secret(f'mp_secret_{shop_name}')
             # Procesar órdenes para esta tienda
-            process_payments(credentials)
+            process_payments(credentials, shop_name)
             print('Fin de procesamiento de tienda')
 
         return {
