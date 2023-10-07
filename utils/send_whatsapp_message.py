@@ -10,8 +10,8 @@ def send_whatsapp_message(body):
     try:
         print('Starting send_whatsapp_message function')
         url = "https://api.ultramsg.com/instance60273/messages/chat"
-
         if stage == 'dev':
+            print('Sending whatsapp message to test group')
             # Si estamos en dev, enviar el mensaje al grupo de testeo
             chat_id = "120363150899530481@g.us"
         else:
