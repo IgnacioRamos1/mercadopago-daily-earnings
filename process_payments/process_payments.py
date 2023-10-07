@@ -5,6 +5,7 @@ from utils.send_whatsapp_message import send_whatsapp_message
 
 def process_payments(credentials, shop_name):
     try:
+        print('Starting process_payments function')
         # Obtener todos los pagos
         payments = get_all_payments(credentials)
         
@@ -17,6 +18,7 @@ def process_payments(credentials, shop_name):
             message += f"{product_name}: ${total}\n"
         send_whatsapp_message(message)
         
+        print('Finished process_payments function')
         return totals_by_product
 
     except Exception as e:

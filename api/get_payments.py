@@ -4,6 +4,7 @@ import datetime
 
 def get_all_payments(credentials):
     try:
+        print('Start get_all_payments')
         headers = {
             'accept': 'application/json',
             'Authorization': f'Bearer {credentials["access_token"]}'
@@ -35,7 +36,7 @@ def get_all_payments(credentials):
 
             # Aumentar el offset para la próxima página
             params['offset'] += params['limit']
-    
+        print('Finished get_all_payments')
         return all_payments
     
     except Exception as e:

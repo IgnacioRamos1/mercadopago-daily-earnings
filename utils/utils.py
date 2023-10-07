@@ -27,7 +27,6 @@ def get_parameter(name):
 
 def get_sqs_queue_url(queue_name):
     try:
-        print('queue_name: ', queue_name)
         sqs = boto3.client('sqs')
         response = sqs.get_queue_url(QueueName=queue_name)
         return response['QueueUrl']

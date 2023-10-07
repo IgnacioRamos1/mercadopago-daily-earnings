@@ -1,6 +1,7 @@
 
 def filter_all_payments(credentials, payments):
     try:
+        print('Starting filter_all_payments function')
         # Obtener la lista de productos desde Secrets Manager
         products = credentials['products']
         
@@ -29,7 +30,8 @@ def filter_all_payments(credentials, payments):
         # Redondear a dos decimales y agregar comas como separadores de miles
         for product_name, total in totals_by_product.items():
             totals_by_product[product_name] = "{:,.2f}".format(round(total, 2))
-    
+
+        print('Finished filter_all_payments function')
         return totals_by_product
 
     except Exception as e:

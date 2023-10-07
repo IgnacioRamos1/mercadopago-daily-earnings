@@ -3,8 +3,6 @@ from utils.utils import get_parameter, ApiException
 import os
 
 token = get_parameter('whatsapp_token')
-
-
 stage = os.environ['STAGE']
 
 
