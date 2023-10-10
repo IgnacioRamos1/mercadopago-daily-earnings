@@ -15,15 +15,14 @@ def process_payments(credentials, shop_name):
         
         # Filtrar los pagos por producto
         totals_by_product = filter_all_payments(credentials, payments)
-        print('Totals by product:', totals_by_product)
 
-        # TODO: Cambiar el stage a prod despues de terminar de probar
-        if stage == 'dev':
-            for product_name, total in totals_by_product.items():
-                print('product_name:', product_name)
-                print('total:', total)
-                update_google_sheet(product_name, total)
-
+        if stage == 'prod':
+            try:
+                for product_name, total in totals_by_product.items():
+                    update_google_sheet(product_name, total)
+            except Exception as e:
+                # If it fails, continue with the process
+                print(f"Error updating google sheet: {e}")
         
         # Enviar un mensaje de whatsapp con los totales
         message = f"Totales para {shop_name}:\n"
