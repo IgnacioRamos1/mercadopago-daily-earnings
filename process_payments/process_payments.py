@@ -19,7 +19,7 @@ def process_payments(credentials, shop_name):
         try:
             for product_name, total in totals_by_product.items():
                 print('Updating google sheet', product_name)
-                update_google_sheet(product_name, total)
+                update_google_sheet(product_name, total, shop_name)
         except Exception as e:
             # If it fails, continue with the process
             print(f"Error updating google sheet: {e}")

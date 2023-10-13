@@ -10,7 +10,7 @@ import time
 import random
 
 
-def update_google_sheet(product_name, ganancia_neta):
+def update_google_sheet(product_name, ganancia_neta, shop_name):
     try:
         credentials = get_parameter('google_credentials')
         credentials = json.loads(credentials)
@@ -28,7 +28,8 @@ def update_google_sheet(product_name, ganancia_neta):
 
         try:
             # Acceder al archivo de Google Sheets
-            spreadsheet = client.open(product_name)
+            spreadsheet_name = f"{shop_name} - {product_name}"
+            spreadsheet = client.open(spreadsheet_name)
         except Exception as e:
             print(f"Error opening spreadsheet: {e}")
             return # Si hay un error, simplemente retornar sin hacer nada
