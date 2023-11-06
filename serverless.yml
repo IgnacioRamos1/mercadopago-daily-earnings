@@ -105,5 +105,5 @@ custom:
     requirementsFile: requirements.txt
   cronEvent:
     prod:
-      - schedule: cron(58 2 * * ? *)
+      - schedule: cron(0 1 * * ? *)
     dev: []

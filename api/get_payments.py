@@ -1,5 +1,5 @@
 import requests
-
+from datetime import datetime, timedelta
 
 def get_all_payments(credentials):
     try:
@@ -9,9 +9,14 @@ def get_all_payments(credentials):
             'Authorization': f'Bearer {credentials["access_token"]}'
         }
 
+        # Obtener la fecha actual y calcular las fechas para el intervalo de búsqueda
+        current_date = datetime.now() - timedelta(days=1)  # Retrocede un día desde la fecha actual
+        end_date = current_date.replace(hour=23, minute=59, second=59, microsecond=0)
+        begin_date = current_date.replace(hour=0, minute=0, second=0, microsecond=0)
+        
         params = {
-            'begin_date': 'NOW-24HOURS',
-            'end_date': 'NOW',
+            'begin_date': begin_date.strftime('%Y-%m-%dT%H:%M:%SZ'),  # Formato ISO8601
+            'end_date': end_date.strftime('%Y-%m-%dT%H:%M:%SZ'),      # Formato ISO8601
             'limit': 100,
             'offset': 0
         }
