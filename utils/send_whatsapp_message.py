@@ -6,7 +6,7 @@ token = get_parameter('whatsapp_token')
 stage = os.environ['STAGE']
 
 
-def send_whatsapp_message(body):
+def send_whatsapp_message(body, wpp_chat_id):
     try:
         print('Starting send_whatsapp_message function')
         url = "https://api.ultramsg.com/instance64344/messages/chat"
@@ -16,7 +16,7 @@ def send_whatsapp_message(body):
             chat_id = "120363150899530481@g.us"
         else:
             # Si estamos en prod, enviar el mensaje al grupo de producción
-            chat_id = "5491166801711@c.us"
+            chat_id = wpp_chat_id
 
         payload = f"token={token}&to={chat_id}&body={body}"
         payload = payload.encode('utf8').decode('iso-8859-1')

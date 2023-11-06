@@ -29,7 +29,7 @@ def process_payments(credentials, shop_name):
         message = f"Totales para {shop_name}:\n"
         for product_name, total in totals_by_product.items():
             message += f"{product_name}: ${total}\n"
-        send_whatsapp_message(message)
+        send_whatsapp_message(message, credentials['wpp'])
         
         print('Finished process_payments function')
         return totals_by_product
