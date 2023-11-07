@@ -1,7 +1,7 @@
 from utils.utils import get_parameter
 
 from oauth2client.service_account import ServiceAccountCredentials
-from datetime import datetime
+from datetime import datetime, timedelta
 from calendar import monthrange
 import gspread
 import json
@@ -91,8 +91,8 @@ def update_google_sheet(product_name, ganancia_neta, shop_name):
         # Definir la zona horaria de Argentina
         tz_argentina = pytz.timezone('America/Argentina/Buenos_Aires')
 
-        # Obtener la fecha y hora actual y ajustarla a la zona horaria de Argentina
-        now_argentina = datetime.now(tz_argentina)
+        # Obtener la fecha y hora actual y ajustarla a la zona horaria de Argentina y restarle un día
+        now_argentina = datetime.now(tz_argentina) - timedelta(days=1)
 
         # Identificar la fila correspondiente a la fecha actual en Argentina
         today_date_full = now_argentina.strftime('%-d/%m/%Y')  # Formato sin cero adelante y año completo
