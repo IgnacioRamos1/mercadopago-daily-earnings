@@ -59,12 +59,14 @@ def send_messages_to_sqs(shop_names):
 def list_shop_secrets():
     try:
         client = boto3.client('secretsmanager', region_name='sa-east-1')
-        response = client.list_secrets()
-
+        paginator = client.get_paginator('list_secrets')
         shop_secrets = []
-        for secret in response['SecretList']:
-            if secret['Name'].startswith('mp_secret_'):
-                shop_secrets.append(secret['Name'].replace('mp_secret_', ''))
+
+        # Itera a través de todas las páginas de la respuesta paginada
+        for page in paginator.paginate():
+            for secret in page['SecretList']:
+                if secret['Name'].startswith('mp_secret_'):
+                    shop_secrets.append(secret['Name'].replace('mp_secret_', ''))
 
         return shop_secrets
 

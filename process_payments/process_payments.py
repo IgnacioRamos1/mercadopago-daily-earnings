@@ -3,6 +3,7 @@ from api.filter_payments import filter_all_payments
 from utils.send_whatsapp_message import send_whatsapp_message
 from google_drive.update_google_sheet import update_google_sheet
 import os
+import time
 
 stage = os.environ['STAGE']
 
@@ -20,6 +21,7 @@ def process_payments(credentials, shop_name):
             for product_name, total in totals_by_product.items():
                 print('Updating google sheet', product_name)
                 update_google_sheet(product_name, total, shop_name)
+                time.sleep(60)
         except Exception as e:
             # If it fails, continue with the process
             print(f"Error updating google sheet: {e}")
