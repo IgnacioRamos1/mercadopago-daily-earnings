@@ -2,10 +2,7 @@ from api.get_payments import get_all_payments
 from api.filter_payments import filter_all_payments
 from utils.send_whatsapp_message import send_whatsapp_message
 from google_drive.update_google_sheet import update_google_sheet
-import os
 import time
-
-stage = os.environ['STAGE']
 
 
 def process_payments(credentials, shop_name):
@@ -17,17 +14,25 @@ def process_payments(credentials, shop_name):
         # Filtrar los pagos por producto
         totals_by_product = filter_all_payments(credentials, payments)
 
-        try:
-            for product_name, total in totals_by_product.items():
-                print('Updating google sheet', product_name)
-                update_google_sheet(product_name, total, shop_name)
-                time.sleep(60)
-        except Exception as e:
-            # If it fails, continue with the process
-            print(f"Error updating google sheet: {e}")
-            print('Product Name', product_name)
-        
-        # Enviar un mensaje de whatsapp con los totales
+        for product_name, total in totals_by_product.items():
+            success = False
+            retries = 7
+            while retries > 0 and not success:
+                try:
+                    print('Updating google sheet', product_name)
+                    update_google_sheet(product_name, total, shop_name)
+                    print('Update successful for', product_name)
+                    success = True
+                except Exception as e:
+                    print(f"Error updating google sheet: {e}")
+                    retries -= 1
+                    print(f"Retrying updating google sheet for {product_name}. Retries left: {retries}")
+                    time.sleep(60)
+
+            if not success:
+                print(f"Failed to update {product_name} after multiple attempts.")
+
+        # Enviar un solo mensaje de Whatsapp con el total de ventas por cada producto
         message = f"Totales para {shop_name}:\n"
         for product_name, total in totals_by_product.items():
             message += f"{product_name}: ${total}\n"

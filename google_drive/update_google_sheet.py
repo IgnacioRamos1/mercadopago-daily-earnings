@@ -6,8 +6,6 @@ from calendar import monthrange
 import gspread
 import json
 import pytz
-import time
-import random
 
 
 def update_google_sheet(product_name, ganancia_neta, shop_name):
@@ -29,6 +27,7 @@ def update_google_sheet(product_name, ganancia_neta, shop_name):
         try:
             # Acceder al archivo de Google Sheets
             spreadsheet_name = f"{shop_name} - {product_name}"
+            print(f"Opening spreadsheet: {spreadsheet_name}")
             spreadsheet = client.open(spreadsheet_name)
         except Exception as e:
             print(f"Error opening spreadsheet: {e}")
@@ -44,49 +43,38 @@ def update_google_sheet(product_name, ganancia_neta, shop_name):
         }
         month_year_name = month_year_name_es[month_year_name.split('-')[0]] + "-" + month_year_name.split('-')[1]
 
-        # Intentar obtener la hoja del mes actual hasta un máximo de 3 veces
-        retries = 3
-        for _ in range(retries):
+        try:
+            worksheet = spreadsheet.worksheet(month_year_name)
+
+        except gspread.exceptions.WorksheetNotFound:
+            # Si no existe, duplicamos la hoja template
+            template_sheet_name = "Template"
+
+            # Si no existe la hoja template, skippear y retornar sin hacer nada
             try:
-                worksheet = spreadsheet.worksheet(month_year_name)
-                break
-
-            except gspread.exceptions.WorksheetNotFound:
-                # Si no existe, duplicamos la hoja template
-                template_sheet_name = "Template"
-
-                # Si no existe la hoja template, skippear y retornar sin hacer nada
-                try:
-                    template_sheet = spreadsheet.worksheet(template_sheet_name)
-                except gspread.exceptions.WorksheetNotFound:
-                    return
-
                 template_sheet = spreadsheet.worksheet(template_sheet_name)
-                spreadsheet.duplicate_sheet(template_sheet.id, new_sheet_name=month_year_name)
-                worksheet = spreadsheet.worksheet(month_year_name)
+            except gspread.exceptions.WorksheetNotFound:
+                return
 
-                # Ajustar la columna de fechas
-                days_in_month = monthrange(datetime.now().year, datetime.now().month)[1]
-                date_column = 1
+            template_sheet = spreadsheet.worksheet(template_sheet_name)
+            spreadsheet.duplicate_sheet(template_sheet.id, new_sheet_name=month_year_name)
+            worksheet = spreadsheet.worksheet(month_year_name)
 
-                # Lista para almacenar las celdas que se actualizarán
-                update_cells = []
+            # Ajustar la columna de fechas
+            days_in_month = monthrange(datetime.now().year, datetime.now().month)[1]
+            date_column = 1
 
-                for day in range(1, days_in_month + 1):
-                    date_value = f"{day}/{datetime.now().month}/{datetime.now().year}"
-                    cell = worksheet.cell(day + 1, date_column)
-                    cell.value = date_value
-                    update_cells.append(cell)
+            # Lista para almacenar las celdas que se actualizarán
+            update_cells = []
 
-                # Hacer un solo llamado para actualizar todas las celdas
-                worksheet.update_cells(update_cells)
-            
-            except Exception as e:
-                if 'RATE_LIMIT_EXCEEDED' in str(e) and _ < retries - 1:
-                    # Esperar con un retroceso exponencial
-                    time.sleep((2 ** _) + random.uniform(0, 1))
-                else:
-                    raise
+            for day in range(1, days_in_month + 1):
+                date_value = f"{day}/{datetime.now().month}/{datetime.now().year}"
+                cell = worksheet.cell(day + 1, date_column)
+                cell.value = date_value
+                update_cells.append(cell)
+
+            # Hacer un solo llamado para actualizar todas las celdas
+            worksheet.update_cells(update_cells)
 
         # Definir la zona horaria de Argentina
         tz_argentina = pytz.timezone('America/Argentina/Buenos_Aires')

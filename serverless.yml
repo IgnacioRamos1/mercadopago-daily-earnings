@@ -54,7 +54,7 @@ functions:
 
   processShop:
     handler: handler.process_mp_shop
-    timeout: 30
+    timeout: 600
     logRetentionInDays: 5
     environment:
       STAGE: ${self:provider.stage}
