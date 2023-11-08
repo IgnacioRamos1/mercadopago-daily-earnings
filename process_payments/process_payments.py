@@ -1,6 +1,6 @@
 from api.get_payments import get_all_payments
 from api.filter_payments import filter_all_payments
-from utils.send_whatsapp_message import send_whatsapp_message
+from utils.send_email import send_email
 from google_drive.update_google_sheet import update_google_sheet
 import time
 
@@ -32,11 +32,11 @@ def process_payments(credentials, shop_name):
             if not success:
                 print(f"Failed to update {product_name} after multiple attempts.")
 
-        # Enviar un solo mensaje de Whatsapp con el total de ventas por cada producto
+        # Enviar un solo mensaje de correo electrónico con todos los totales
         message = f"Totales para {shop_name}:\n"
         for product_name, total in totals_by_product.items():
             message += f"{product_name}: ${total}\n"
-        send_whatsapp_message(message, credentials['wpp'])
+        send_email(message, credentials['email'], shop_name)
         
         print('Finished process_payments function')
         return totals_by_product

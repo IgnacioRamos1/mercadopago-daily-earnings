@@ -28,6 +28,11 @@ provider:
             - "arn:aws:sqs:sa-east-1:*:mp-processor-queue-${self:provider.stage}"
         - Effect: Allow
           Action:
+            - ses:SendEmail
+            - ses:SendRawEmail
+          Resource: "*"
+        - Effect: Allow
+          Action:
             - sns:Publish
           Resource:
             Fn::Join:
