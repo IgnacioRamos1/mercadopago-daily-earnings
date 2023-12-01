@@ -11,17 +11,27 @@ def get_all_payments(credentials):
             'Authorization': f'Bearer {credentials["access_token"]}'
         }
 
-        # Obtener la fecha y hora actual en la zona horaria de Argentina
-        tz_argentina = pytz.timezone('America/Argentina/Buenos_Aires')
+        # Obtener la fecha y hora actual en la zona horaria 'America/New_York' (UTC-4)
+        tz_new_york = pytz.timezone('America/New_York')
+        current_date_new_york = datetime.now(tz_new_york)
 
-        # Obtener la fecha actual y calcular las fechas para el intervalo de búsqueda
-        current_date = datetime.now(tz_argentina) - timedelta(days=1)  # Retrocede un día desde la fecha actual
-        end_date = current_date.replace(hour=23, minute=59, second=59, microsecond=0)
-        begin_date = current_date.replace(hour=0, minute=0, second=0, microsecond=0)
-        
+        # Ajustar las horas, minutos y segundos para obtener el inicio y fin del día anterior en 'America/New_York' (UTC-4)
+        end_date_new_york = current_date_new_york.replace(hour=0, minute=0, second=0, microsecond=0)
+        begin_date_new_york = end_date_new_york - timedelta(days=1)
+
+        # Convertir las fechas a la zona horaria de Argentina (UTC-3)
+        tz_argentina = pytz.timezone('America/Argentina/Buenos_Aires')
+        begin_date_argentina = begin_date_new_york.astimezone(tz_argentina) + timedelta(hours=1)
+        end_date_argentina = end_date_new_york.astimezone(tz_argentina) + timedelta(hours=1)
+
+        # Imprimir las fechas para verificar
+        print(f'Fecha de inicio en Argentina: {begin_date_argentina}')
+        print(f'Fecha de fin en Argentina: {end_date_argentina}')
+
+        # Utilizar las fechas para la búsqueda en la API
         params = {
-            'begin_date': begin_date.strftime('%Y-%m-%dT%H:%M:%SZ'),  # Formato ISO8601
-            'end_date': end_date.strftime('%Y-%m-%dT%H:%M:%SZ'),      # Formato ISO8601
+            'begin_date': begin_date_argentina.strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'end_date': end_date_argentina.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'limit': 100,
             'offset': 0
         }

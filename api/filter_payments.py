@@ -5,6 +5,8 @@ def filter_all_payments(credentials, payments):
         print('Starting filter_all_payments function')
 
         gross_amounts = []
+        net_amounts = []
+        time = []
         
         # Obtener la lista de productos desde Secrets Manager
         products = credentials['products']
@@ -19,8 +21,10 @@ def filter_all_payments(credentials, payments):
             if 'shopify_data' in payment['metadata'] and payment['status'] == 'approved':
                 gross_amount = payment['transaction_details']['total_paid_amount']
                 net_amount = payment['transaction_details']['net_received_amount']
-
+                
+                time.append(payment['date_created'])
                 gross_amounts.append(gross_amount)
+                net_amounts.append(net_amount)
 
                 # Print email && date_created
                 print(payment['payer']['email'], payment['date_created'], gross_amount, net_amount)
@@ -45,7 +49,9 @@ def filter_all_payments(credentials, payments):
         for product_name, total in totals_by_product.items():
             totals_by_product[product_name] = "{:,.2f}".format(round(total, 2))
 
+        print('Net amounts', net_amounts)
         print('Gross amounts', gross_amounts)
+        print('Time', time)
         print('Finished filter_all_payments function')
         return totals_by_product
 

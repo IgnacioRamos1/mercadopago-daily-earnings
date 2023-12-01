@@ -2,7 +2,6 @@ from api.get_payments import get_all_payments
 from api.filter_payments import filter_all_payments
 from utils.send_email import send_email
 from google_drive.update_google_sheet import update_google_sheet
-import time
 
 
 def process_payments(credentials, shop_name):
@@ -15,22 +14,9 @@ def process_payments(credentials, shop_name):
         totals_by_product = filter_all_payments(credentials, payments)
 
         for product_name, total in totals_by_product.items():
-            success = False
-            retries = 7
-            while retries > 0 and not success:
-                try:
-                    print('Updating google sheet', product_name)
-                    update_google_sheet(product_name, total, shop_name)
-                    print('Update successful for', product_name)
-                    success = True
-                except Exception as e:
-                    print(f"Error updating google sheet: {e}")
-                    retries -= 1
-                    print(f"Retrying updating google sheet for {product_name}. Retries left: {retries}")
-                    time.sleep(60)
-
-            if not success:
-                print(f"Failed to update {product_name} after multiple attempts.")
+            print(f"Updating spreadsheet for {product_name}")
+            update_google_sheet(product_name, total, shop_name)
+            print(f"Finished updating spreadsheet for {product_name}")
 
         # Enviar un solo mensaje de correo electrónico con todos los totales
         message = f"Totales para {shop_name}:\n"
