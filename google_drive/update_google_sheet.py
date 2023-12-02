@@ -51,13 +51,6 @@ def update_google_sheet(product_name, ganancia_neta, shop_name):
         # Obtener la fecha y hora actual y ajustarla a la zona horaria de Argentina y restarle un día
         now_argentina = datetime.now(tz_argentina) - timedelta(days=1)
 
-        # Verificar si la fecha actual es el último día del mes
-        is_last_day_of_month = now_argentina.day == (now_argentina + timedelta(days=1)).replace(day=1).day
-
-        # Si es el último día del mes, restar un día adicional
-        if is_last_day_of_month:
-            now_argentina -= timedelta(days=1)
-
         print(f"Current date in Argentina: {now_argentina}")
         
         # Generar el nombre de la hoja en el formato "Octubre-2023"
