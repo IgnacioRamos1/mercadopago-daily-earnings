@@ -1,6 +1,7 @@
 import boto3
 import json
 import os
+import datetime
 
 ssm_client = boto3.client('ssm')
 
@@ -82,3 +83,8 @@ def get_secret(shop_name):
 
     except Exception as e:
         raise Exception(f"Error in get_secret function: {e}")
+
+
+def is_weekend():
+    today = datetime.datetime.now().weekday()
+    return today == 5 or today == 6  # 5 es viernes, 6 es sábado

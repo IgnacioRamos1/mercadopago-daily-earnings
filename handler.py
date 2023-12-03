@@ -1,5 +1,5 @@
 from process_payments.process_payments import process_payments
-from utils.utils import send_messages_to_sqs, list_shop_secrets, get_secret
+from utils.utils import send_messages_to_sqs, list_shop_secrets, get_secret, is_weekend
 
 import os
 import logging
@@ -21,6 +21,12 @@ sns_topic_arn = f'arn:aws:sns:sa-east-1:421852645480:MpLambdaErrorNotifications-
 
 def trigger_mp_processing(event, context):
     try:
+        if stage == 'prod' and is_weekend():
+            return {
+                'statusCode': 200,
+                'body': "No se procesan tiendas los fines de semana"
+            }
+
         # Obtener la lista de tiendas desde Secrets Manager
         shop_names = list_shop_secrets()
 
