@@ -21,8 +21,8 @@ def get_all_payments(credentials):
 
         # Convertir las fechas a la zona horaria de Argentina (UTC-3)
         tz_argentina = pytz.timezone('America/Argentina/Buenos_Aires')
-        begin_date_argentina = begin_date_new_york.astimezone(tz_argentina) + timedelta(hours=1)
-        end_date_argentina = end_date_new_york.astimezone(tz_argentina) + timedelta(hours=1)
+        begin_date_argentina = begin_date_new_york.astimezone(tz_argentina) + timedelta(hours=2)
+        end_date_argentina = end_date_new_york.astimezone(tz_argentina) + timedelta(hours=2)
 
         # Imprimir las fechas para verificar
         print(f'Fecha de inicio en Argentina: {begin_date_argentina}')

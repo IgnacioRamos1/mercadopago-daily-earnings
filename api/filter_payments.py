@@ -27,7 +27,7 @@ def filter_all_payments(credentials, payments):
                 net_amounts.append(net_amount)
 
                 # Print email && date_created
-                print(payment['payer']['email'], payment['date_created'], gross_amount, net_amount)
+                # print(payment['payer']['email'], payment['date_created'], gross_amount, net_amount)
 
                 # Buscar el producto por el valor neto
                 product_name = None
