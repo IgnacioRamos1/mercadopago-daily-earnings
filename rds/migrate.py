@@ -1,6 +1,6 @@
 from sqlalchemy.orm import sessionmaker
-from domain.product import Product, Price
-from domain.store import Store
+from manual.manual_product import Product, Price
+from manual.manual_store import Store
 from utils.db_connection import dev_engine, prod_engine
 
 DevSession = sessionmaker(bind=dev_engine)
