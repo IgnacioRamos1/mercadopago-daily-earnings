@@ -1,11 +1,14 @@
 from process_payments.process_payments import process_payments
-from utils.utils import send_messages_to_sqs, list_shop_secrets, get_secret
+from utils.utils import send_messages_to_sqs
 
 import os
 import logging
 from datetime import datetime
 import boto3
 import json
+
+from rds.get_store_uuid import get_all_stores_uuid
+from rds.get_store import get_store
 
 
 logger = logging.getLogger()
@@ -21,15 +24,17 @@ sns_topic_arn = f'arn:aws:sns:sa-east-1:421852645480:MpLambdaErrorNotifications-
 
 def trigger_mp_processing(event, context):
     try:
-        # Obtener la lista de tiendas desde Secrets Manager
-        shop_names = list_shop_secrets()
+        # # Obtener la lista de tiendas desde Secrets Manager
+        # shop_names = list_shop_secrets()
 
+        shop_uuids = get_all_stores_uuid()
+        
         # Enviar un mensaje a SQS por cada tienda
-        send_messages_to_sqs(shop_names)
+        send_messages_to_sqs(shop_uuids)
 
         return {
             'statusCode': 200,
-            'body': f"Triggered processing for {len(shop_names)} shops."
+            'body': f"Triggered processing for {len(shop_uuids)} shops."
         }
     except Exception as e:
         error_message = f'Error in trigger_shop_processing function: {e}'
@@ -54,12 +59,12 @@ def process_mp_shop(event, context):
         for record in event['Records']:
             print('Inicio de procesamiento de tienda')
             message_body = json.loads(record['body'])
-            shop_name = message_body['shop_name']
+            shop_uuid = message_body['shop_uuid']
 
-            # Recuperar las credenciales para esta tienda específica
-            credentials = get_secret(f'mp_secret_{shop_name}')
+            store = get_store(shop_uuid)
+
             # Procesar órdenes para esta tienda
-            process_payments(credentials, shop_name)
+            process_payments(store)
             print('Fin de procesamiento de tienda')
 
         return {
@@ -74,7 +79,7 @@ def process_mp_shop(event, context):
         sns_client.publish(
             TopicArn=sns_topic_arn,
             Message=error_message,
-            Subject=f'Error in process_shop function {date} - {shop_name}'
+            Subject=f'Error in process_shop function {date} - {store.name}'
         )
         return {
             'statusCode': 500,

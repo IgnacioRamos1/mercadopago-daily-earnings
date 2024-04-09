@@ -3,12 +3,12 @@ from datetime import datetime, timedelta
 import pytz
 
 
-def get_all_payments(credentials):
+def get_all_payments(access_token):
     try:
         print('Start get_all_payments')
         headers = {
             'accept': 'application/json',
-            'Authorization': f'Bearer {credentials["access_token"]}'
+            'Authorization': f'Bearer {access_token}'
         }
 
         # Obtener la fecha y hora actual en la zona horaria 'America/New_York' (UTC-4)

@@ -5,7 +5,7 @@ import binascii
 
 if 'AWS_EXECUTION_ENV' in os.environ:
     from utils.utils import get_parameter
-    hex_key = get_parameter('secret_key')
+    hex_key = get_parameter('secret_key_mp')
 
 else:
     from dotenv import load_dotenv
@@ -24,4 +24,3 @@ def encrypt_string(string):
 def decrypt_string(encrypted_string_hex):
     encrypted_bytes = binascii.unhexlify(encrypted_string_hex)  # Convertir de hex a bytes
     return box.decrypt(encrypted_bytes).decode()
-

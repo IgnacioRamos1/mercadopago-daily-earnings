@@ -1,15 +1,12 @@
 
 
-def filter_all_payments(credentials, payments):
+def filter_all_payments(products, payments):
     try:
         print('Starting filter_all_payments function')
 
         gross_amounts = []
         net_amounts = []
         time = []
-        
-        # Obtener la lista de productos desde Secrets Manager
-        products = credentials['products']
         
         # Crear un diccionario para sumar los valores netos por producto
         totals_by_product = {}

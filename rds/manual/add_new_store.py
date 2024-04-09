@@ -40,4 +40,3 @@ session.commit()
 
 # Cierra la sesión
 session.close()
-
