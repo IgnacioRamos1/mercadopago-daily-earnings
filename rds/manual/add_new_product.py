@@ -60,7 +60,8 @@ def main():
                 print(f"Has seleccionado: {product.name}")
                 print('---------------------------------')
                 print("Precios actuales:")
-                for index, price in enumerate(product.prices, start=1):
+                prices = session.query(Price).filter(Price.product_id == product.id).all()
+                for index, price in enumerate(prices, start=1):
                     print(f"{index}. ${price.amount}")
                 print('---------------------------------')
                 # Llama a manage_product_prices para gestionar los precios del producto seleccionado

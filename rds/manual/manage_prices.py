@@ -12,7 +12,7 @@ def manage_product_prices(session, product):
             session.commit()
             print("Nuevo precio agregado correctamente.")
         elif accion == '2':
-            precios = product.prices  # Acceder a los precios a través de la relación
+            precios = session.query(Price).filter(Price.product_id == product.id).all()
             for index, price in enumerate(precios, start=1):
                 print(f"{index}. ${price.amount}")
             print('---------------------------------')
@@ -27,7 +27,7 @@ def manage_product_prices(session, product):
             else:
                 print("Número de precio inválido.")
         elif accion == '3':
-            precios = product.prices  # Acceder a los precios a través de la relación
+            precios = session.query(Price).filter(Price.product_id == product.id).all()
             for index, price in enumerate(precios, start=1):
                 print(f"{index}. ${price.amount}")
             print('---------------------------------')

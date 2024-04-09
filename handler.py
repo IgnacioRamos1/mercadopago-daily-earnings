@@ -24,9 +24,6 @@ sns_topic_arn = f'arn:aws:sns:sa-east-1:421852645480:MpLambdaErrorNotifications-
 
 def trigger_mp_processing(event, context):
     try:
-        # # Obtener la lista de tiendas desde Secrets Manager
-        # shop_names = list_shop_secrets()
-
         shop_uuids = get_all_stores_uuid()
         
         # Enviar un mensaje a SQS por cada tienda
