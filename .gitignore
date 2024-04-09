@@ -6,3 +6,6 @@ package.json
 node_modules
 .vscode/
 __pycache__/
+.env
+*.pyc
+DEPRECATED/aws_secrets
