@@ -1,4 +1,5 @@
 from sqlalchemy.orm import sessionmaker
+from datetime import datetime
 
 from manual_store import Store
 from utils.db_connection import dev_engine
@@ -18,13 +19,18 @@ while choice == "y":
     name = str(input("Enter the name of the store: "))
     access_token = encrypt_string(str(input("Enter the access token of the store: ")))
     email = "iramosibx@gmail.com"
-    
+    owner = str(input("Enter the owner of the store: "))
+
+    # Agregar la fecha de creación de la tienda
+    date = datetime.now().date()
 
     # Crea una nueva instancia de la clase Store con los datos proporcionados
     nueva_tienda = Store(
         name=name,
         access_token=access_token,
         email=email,
+        created_at=date,
+        owner=owner
     )
 
     # Agrega la nueva tienda a la sesión
