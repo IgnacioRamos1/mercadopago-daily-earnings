@@ -50,8 +50,6 @@ def update_google_sheet(product_name, ganancia_neta, shop_name):
 
         # Obtener la fecha y hora actual y ajustarla a la zona horaria de Argentina y restarle un día
         now_argentina = datetime.now(tz_argentina) - timedelta(days=1)
-
-        print(f"Current date in Argentina: {now_argentina}")
         
         # Generar el nombre de la hoja en el formato "Octubre-2023"
         month_year_name = now_argentina.strftime('%B-%Y').capitalize()
@@ -87,8 +85,6 @@ def update_google_sheet(product_name, ganancia_neta, shop_name):
 
         # Identificar la columna "FACT neta(mp)"
         header_row = worksheet.row_values(1)
-
-        print(f"Searching for column 'FACT neta(mp)' in row 1 of worksheet {month_year_name}")
 
         try:
             ganancia_column = header_row.index("FACT neta(mp)") + 1

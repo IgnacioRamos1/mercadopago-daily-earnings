@@ -24,10 +24,6 @@ def get_all_payments(access_token):
         begin_date_argentina = begin_date_new_york.astimezone(tz_argentina) + timedelta(hours=2)
         end_date_argentina = end_date_new_york.astimezone(tz_argentina) + timedelta(hours=2)
 
-        # Imprimir las fechas para verificar
-        print(f'Fecha de inicio en Argentina: {begin_date_argentina}')
-        print(f'Fecha de fin en Argentina: {end_date_argentina}')
-
         # Utilizar las fechas para la búsqueda en la API
         params = {
             'begin_date': begin_date_argentina.strftime('%Y-%m-%dT%H:%M:%SZ'),
