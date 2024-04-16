@@ -47,7 +47,7 @@ def send_messages_to_sqs(shop_names):
         for batch in batches:
             entries = [{
                 'Id': str(i),
-                'MessageBody': json.dumps({"shop_uuid": name})
+                'MessageBody': json.dumps({"shop_id": name})
             } for i, name in enumerate(batch)]
 
             sqs.send_message_batch(QueueUrl=queue_url, Entries=entries)

@@ -106,18 +106,6 @@ resources:
               Fn::GetAtt:
                 - "ProcessShopLambdaFunction"
                 - "Arn"
-    postgresInstance:
-      Type: 'AWS::RDS::DBInstance'
-      Properties:
-        DBInstanceIdentifier: postgres-mercadopago-db-${self:provider.stage}
-        PubliclyAccessible: true
-        Engine: postgres
-        EngineVersion: '14.6'
-        DBInstanceClass: db.t4g.micro
-        AllocatedStorage: 20
-        DBName: ${ssm:/${self:provider.stage}_db_name_mp}
-        MasterUsername: ${ssm:/${self:provider.stage}_db_username_mp}
-        MasterUserPassword: ${ssm:/${self:provider.stage}_db_password_mp}
 
 plugins:
   - serverless-python-requirements
