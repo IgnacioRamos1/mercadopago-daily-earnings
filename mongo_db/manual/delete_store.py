@@ -1,5 +1,5 @@
 from database import Database
-from select_store import select_store
+from mongo_db.manual.select_store import select_store
 
 
 def delete_store():

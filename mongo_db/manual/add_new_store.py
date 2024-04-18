@@ -1,5 +1,5 @@
 from database import Database
-from security import encrypt_string
+from mongo_db.utils.security import encrypt_string
 
 from datetime import datetime
 

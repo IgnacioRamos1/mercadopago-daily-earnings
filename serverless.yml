@@ -15,11 +15,6 @@ provider:
           Resource: "*"
         - Effect: Allow
           Action:
-            - secretsmanager:GetSecretValue
-            - secretsmanager:ListSecrets
-          Resource: "*"
-        - Effect: Allow
-          Action:
             - sqs:SendMessage
             - sqs:ReceiveMessage
             - sqs:DeleteMessage

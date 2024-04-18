@@ -6,9 +6,9 @@ import sys
 import os
 sys.path.append(os.path.abspath('..'))
 
-from utils.utils import get_parameter
 
 if 'AWS_EXECUTION_ENV' in os.environ:
+    from utils.utils import get_parameter
     ATLAS_URI = get_parameter('mp_atlas_uri')
     DB_NAME = get_parameter('mp_db_name')
 

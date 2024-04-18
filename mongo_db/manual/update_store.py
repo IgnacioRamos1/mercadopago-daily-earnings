@@ -1,6 +1,6 @@
 from database import Database
-from select_store import select_store
-from security import encrypt_string
+from mongo_db.manual.select_store import select_store
+from mongo_db.utils.security import encrypt_string
 
 
 def update_store():
