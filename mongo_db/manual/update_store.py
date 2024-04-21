@@ -1,6 +1,10 @@
+import sys
+import os
+sys.path.append(os.path.abspath('..'))
+
 from database import Database
-from mongo_db.manual.select_store import select_store
-from mongo_db.utils.security import encrypt_string
+from manual.select_store import select_store
+from utils.security import encrypt_string
 
 
 def update_store():
