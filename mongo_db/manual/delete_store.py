@@ -1,5 +1,10 @@
+import sys
+import os
+sys.path.append(os.path.abspath('..'))
+
+
 from database import Database
-from mongo_db.manual.select_store import select_store
+from select_store import select_store
 
 
 def delete_store():
