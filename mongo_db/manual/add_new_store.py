@@ -1,5 +1,9 @@
+import sys
+import os
+sys.path.append(os.path.abspath('..'))
+
 from database import Database
-from mongo_db.utils.security import encrypt_string
+from utils.security import encrypt_string
 
 from datetime import datetime
 

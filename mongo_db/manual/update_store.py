@@ -4,7 +4,7 @@ sys.path.append(os.path.abspath('..'))
 
 from database import Database
 from manual.select_store import select_store
-from utils.security import encrypt_string
+from utils.security import encrypt_string, decrypt_string
 
 
 def update_store():
