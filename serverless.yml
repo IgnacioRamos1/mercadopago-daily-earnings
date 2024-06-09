@@ -77,30 +77,6 @@ resources:
       Type: AWS::SQS::Queue
       Properties:
         QueueName: mp-processor-queue-${self:provider.stage}
-    MpLambdaErrorNotifications:
-      Type: AWS::SNS::Topic
-      Properties:
-        DisplayName: "Lambda Error Notifications-${self:provider.stage}"
-        TopicName: "MpLambdaErrorNotifications-${self:provider.stage}"
-    MpLambdaFunctionErrorAlarm:
-      Type: AWS::CloudWatch::Alarm
-      Properties:
-        AlarmDescription: "Triggered when the Lambda function has errors"
-        Namespace: "AWS/Lambda"
-        MetricName: "Errors"
-        Statistic: "Sum"
-        Period: 300
-        EvaluationPeriods: 1
-        Threshold: 1
-        ComparisonOperator: "GreaterThanOrEqualToThreshold"
-        AlarmActions:
-          - Ref: MpLambdaErrorNotifications
-        Dimensions:
-          - Name: "FunctionName"
-            Value:
-              Fn::GetAtt:
-                - "ProcessShopLambdaFunction"
-                - "Arn"
 
 plugins:
   - serverless-python-requirements

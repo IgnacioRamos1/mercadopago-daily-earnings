@@ -18,6 +18,5 @@ def delete_store():
 
     database.close_connection()
 
-
 if __name__ == '__main__':
     delete_store()
