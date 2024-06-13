@@ -18,7 +18,7 @@ def filter_all_payments(products, payments, provider):
         for payment in payments:
             if provider == 'shopify':
                 if 'shopify_data' in payment['metadata'] and payment['status'] == 'approved':
-                    filter_payments(payment['shopify_data'], gross_amounts, net_amounts, time, products, totals_by_product)
+                    filter_payments(payment, gross_amounts, net_amounts, time, products, totals_by_product)
             else:
                 if 'shopify_data' in payment['metadata']:
                     continue
