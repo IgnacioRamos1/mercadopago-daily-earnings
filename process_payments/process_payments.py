@@ -10,6 +10,8 @@ def process_payments(store):
         print('Starting process_payments function', store["name"])
         
         access_token = decrypt_string(store["access_token"])
+        
+        provider = store["provider"]
 
         # Obtener todos los pagos
         payments = get_all_payments(access_token)
@@ -17,7 +19,7 @@ def process_payments(store):
         products = get_store_products(store["_id"])
         
         # Filtrar los pagos por producto
-        totals_by_product = filter_all_payments(products, payments)
+        totals_by_product = filter_all_payments(products, payments, provider)
 
         for product_name, total in totals_by_product.items():
             print(f"Updating spreadsheet for {product_name}")

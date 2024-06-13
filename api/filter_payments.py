@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 
-def filter_all_payments(products, payments):
+def filter_all_payments(products, payments, provider):
     try:
         print('Starting filter_all_payments function')
 
@@ -16,39 +16,13 @@ def filter_all_payments(products, payments):
         
         # Procesar cada pago
         for payment in payments:
-            if 'shopify_data' in payment['metadata'] and payment['status'] == 'approved':
-                
-                # Filtrar los pagos de ayer
-                yesterday = datetime.now() - timedelta(days=1)
-                date_created = datetime.strptime(payment['date_created'], "%Y-%m-%dT%H:%M:%S.%f%z")
-                date_created = date_created.replace(tzinfo=None) + timedelta(hours=1) # Convertir a UTC-3
-
-                if date_created.date() == yesterday.date():
-                    gross_amount = payment['transaction_details']['total_paid_amount']
-                    net_amount = payment['transaction_details']['net_received_amount']
-                    
-                    time.append(payment['date_created'])
-                    gross_amounts.append(gross_amount)
-                    net_amounts.append(net_amount)
-
-                    # Print email && date_created
-                    # print(payment['payer']['email'], payment['date_created'], gross_amount, net_amount)
-
-                    # Buscar el producto por el valor neto
-                    product_name = None
-                    for product in products:
-                        for price in product['prices']:
-                            # Verificar si el monto bruto es un múltiplo del precio
-                            if gross_amount % price == 0:
-                                product_name = product['name']
-                                break
-                        if product_name:
-                            break
-                    
-                    if product_name:
-                        totals_by_product[product_name] += net_amount
-                    else:
-                        print(f"Warning: No product found for gross amount {gross_amount}!")
+            if provider == 'shopify':
+                if 'shopify_data' in payment['metadata'] and payment['status'] == 'approved':
+                    filter_payments(payment['shopify_data'], gross_amounts, net_amounts, time, products, totals_by_product)
+            else:
+                if 'shopify_data' in payment['metadata']:
+                    continue
+                filter_payments(payment, gross_amounts, net_amounts, time, products, totals_by_product)                
         
         # Redondear a dos decimales y agregar comas como separadores de miles
         for product_name, total in totals_by_product.items():
@@ -62,3 +36,37 @@ def filter_all_payments(products, payments):
 
     except Exception as e:
         raise Exception(f"Error in filter_all_payments function: {e}")
+
+
+def filter_payments(payment, gross_amounts, net_amounts, time, products, totals_by_product):
+    # Filtrar los pagos de ayer
+    yesterday = datetime.now() - timedelta(days=1)
+    date_created = datetime.strptime(payment['date_created'], "%Y-%m-%dT%H:%M:%S.%f%z")
+    date_created = date_created.replace(tzinfo=None) + timedelta(hours=1) # Convertir a UTC-3
+
+    if date_created.date() == yesterday.date():
+        gross_amount = payment['transaction_details']['total_paid_amount']
+        net_amount = payment['transaction_details']['net_received_amount']
+        
+        time.append(payment['date_created'])
+        gross_amounts.append(gross_amount)
+        net_amounts.append(net_amount)
+
+        # Print email && date_created
+        # print(payment['payer']['email'], payment['date_created'], gross_amount, net_amount)
+
+        # Buscar el producto por el valor neto
+        product_name = None
+        for product in products:
+            for price in product['prices']:
+                # Verificar si el monto bruto es un múltiplo del precio
+                if gross_amount % price == 0:
+                    product_name = product['name']
+                    break
+            if product_name:
+                break
+        
+        if product_name:
+            totals_by_product[product_name] += net_amount
+        else:
+            print(f"Warning: No product found for gross amount {gross_amount}!")
