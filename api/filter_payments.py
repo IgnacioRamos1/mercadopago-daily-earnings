@@ -22,7 +22,9 @@ def filter_all_payments(products, payments, provider):
             else:
                 if 'shopify_data' in payment['metadata']:
                     continue
-                if provider.replace(' ', '') in payment['metadata']['original_notification_url']:
+
+                original_notification_url = payment.get('metadata', {}).get('original_notification_url', '')
+                if provider.replace(' ', '') in original_notification_url:
                     counter = filter_payments(payment, gross_amounts, net_amounts, time, products, totals_by_product)
                     if counter == 1:
                         print(payment)
