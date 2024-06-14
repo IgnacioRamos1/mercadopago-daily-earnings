@@ -25,10 +25,7 @@ def filter_all_payments(products, payments, provider):
 
                 original_notification_url = payment.get('metadata', {}).get('original_notification_url', '')
                 if provider.replace(' ', '') in original_notification_url:
-                    counter = filter_payments(payment, gross_amounts, net_amounts, time, products, totals_by_product)
-                    if counter == 1:
-                        print(payment)
-                        break               
+                    filter_payments(payment, gross_amounts, net_amounts, time, products, totals_by_product)      
         
         # Redondear a dos decimales y agregar comas como separadores de miles
         for product_name, total in totals_by_product.items():
@@ -74,5 +71,3 @@ def filter_payments(payment, gross_amounts, net_amounts, time, products, totals_
         
         if product_name:
             totals_by_product[product_name] += net_amount
-        
-        return 1
